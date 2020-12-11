@@ -3,61 +3,38 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StreamTokenizer;
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 public class csp_2015_03_2 {
 
 	public static void main(String[] args) throws IOException {
 		StreamTokenizer in = new StreamTokenizer(new BufferedReader(new InputStreamReader(System.in)));
-		
 		in.nextToken();
 		int n = (int) in.nval;
 		
-		Num[] nums = new Num[1005];
-		int sum = 0;  // 记录num下标
-		Map<Integer, Integer> map = new HashMap<>();  // 存储数字,下标
+		Num[] num = new Num[1001];
+		for (int i = 0; i < 1001; i ++) {
+			num[i] = new Num(i, 0);
+		}
 		
 		for (int i = 0; i < n; i ++) {
 			in.nextToken();
-			int t = (int) in.nval;
-			
-			if (map.containsKey(t)) {
-				nums[map.get(t)].sum ++;
-			} else {
-				map.put(t, sum);
-				nums[sum] = new Num(t);
-				sum ++;
-			}
+			num[(int) in.nval].cnt ++;
 		}
 		
-		Comparator<Num> cmp = new Comparator<Num>() {
-			@Override
-			public int compare(Num n1, Num n2) {
-				if (n1.sum == n2.sum) {
-					return n1.num - n2.num;
-				}
-				else {
-					return n2.sum - n1.sum;
-				}
-			}
-		};
-		Arrays.sort(nums, 0, sum, cmp);
+		Arrays.sort(num, (n1, n2) -> n2.cnt == n1.cnt ?
+				n1.num - n2.num : n2.cnt - n1.cnt);
 		
-		for (int i = 0; i < sum; i ++) {
-			System.out.println(nums[i].num + " " + nums[i].sum);
+		for (int i = 0; i < 1001 && num[i].cnt > 0; i ++) {
+			System.out.println(num[i].num + " " + num[i].cnt);
 		}
 	}
 	
-	static class Num {
+	static class Num{
 		int num;
-		int sum;
-		public Num(int num) {
+		int cnt;
+		public Num(int num, int cnt) {
 			this.num = num;
-			this.sum = 1;
+			this.cnt = cnt;
 		}
 	}
 }

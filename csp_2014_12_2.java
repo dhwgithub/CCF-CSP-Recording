@@ -9,89 +9,65 @@ public class csp_2014_12_2 {
 		StreamTokenizer in = new StreamTokenizer(new BufferedReader(new InputStreamReader(System.in)));
 		in.nextToken();
 		int n = (int) in.nval;
-		int[][] map = new int[n][n];
+		
+		int[][] num = new int[n][n];
 		for (int i = 0; i < n; i ++) {
 			for (int j = 0; j < n; j ++) {
 				in.nextToken();
-				map[i][j] = (int) in.nval;
+				num[i][j] = (int) in.nval;
 			}
 		}
 		
-		int i = 0;
-		int j = 0;
-		int[] ij = new int[2];
-		System.out.print(map[i][j]);
-		while (true) {
-			/**
-			 * 右移一位
-			 */
-			if (j + 1 < n) {
-				ij = toRight(i, j, map);
-				i = ij[0];
-				j = ij[1];
-			} else {
-				if (i + 1 < n) {
-					ij = toDown(i, j, map);
-					i = ij[0];
-					j = ij[1];
-				} else {
-					break;
-				}
-			}
-			/**
-			 * 左下方移动，直到边界
-			 */
-			while (i + 1 < n && j - 1 >= 0) {
-				ij = toLeftDown(i, j, map);
-				i = ij[0];
-				j = ij[1];
+		int[] pos = new int[2];
+		System.out.print(num[0][0]);
+		while (!(pos[0] == n - 1 && pos[1] == n - 1)) {
+			// 右移 或 下移
+			if (pos[1] + 1 == n) {
+				down_one(pos);
 			} 
-			/**
-			 * 下移一位
-			 */
-			if (i + 1 < n) {
-				ij = toDown(i, j, map);
-				i = ij[0];
-				j = ij[1];
-			} else {
-				if (j + 1 < n) {
-					ij = toRight(i, j, map);
-					i = ij[0];
-					j = ij[1];
-				} else {
-					break;
-				}
+			else {
+				right_one(pos);
 			}
-			/**
-			 * 右上方移动，直到边界
-			 */
-			while (i - 1 >= 0 && j + 1 < n) {
-				ij = toRightUp(i, j, map);
-				i = ij[0];
-				j = ij[1];
+			System.out.print(" " + num[pos[0]][pos[1]]);
+						
+			// 左下移动
+			while (pos[0] + 1 < n && pos[1] - 1 >= 0) {
+				left_one(pos);
+				down_one(pos);
+				System.out.print(" " + num[pos[0]][pos[1]]);
+			}
+			
+			// 下移 或右移
+			if (pos[0] + 1 == n) {
+				right_one(pos);
+			}
+			else {
+				down_one(pos);
+			}
+			System.out.print(" " + num[pos[0]][pos[1]]);
+			
+			// 右上移动
+			while (pos[0] - 1 >= 0 && pos[1] + 1 < n) {
+				right_one(pos);
+				up_one(pos);
+				System.out.print(" " + num[pos[0]][pos[1]]);
 			}
 		}
-		System.out.println();
-	}
-	
-	private static int[] toRight(int i, int j, int[][] map) {
-		System.out.print(" " + map[i][j + 1]);
-		return new int[] {i, j + 1};
-	}
-	
-	private static int[] toLeftDown(int i, int j, int[][] map) {
-		System.out.print(" " + map[i + 1][j - 1]);
-		return new int[] {i + 1, j - 1};
-	}
-	
-	private static int[] toDown(int i, int j, int[][] map) {
-		System.out.print(" " + map[i + 1][j]);
-		return new int[] {i + 1, j};
-	}
-	
-	private static int[] toRightUp(int i, int j, int[][] map) {
-		System.out.print(" " + map[i - 1][j + 1]);
-		return new int[] {i - 1, j + 1};
 	}
 
+	private static void up_one(int[] pos) {
+		pos[0] --;
+	}
+
+	private static void right_one(int[] pos) {
+		pos[1] ++;
+	}
+
+	private static void down_one(int[] pos) {
+		pos[0] ++;
+	}
+
+	private static void left_one(int[] pos) {
+		pos[1] --;
+	}
 }
